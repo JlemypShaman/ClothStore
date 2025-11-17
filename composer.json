@@ -1,0 +1,6 @@
+{
+    "require": {
+        "php": ">=8.2",
+        "cloudinary/cloudinary_php": "^2.0"
+    }
+}
