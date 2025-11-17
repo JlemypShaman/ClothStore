@@ -35,9 +35,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="image_url">Image URL</label>
-                    <input type="text" id="image_url" name="image_url" placeholder="e.g., img/product.webp">
+                    <label for="image_file">Product Image</label>
+                    <input type="file" id="image_file" name="image_file" accept="image/*">
                 </div>
+
+                <input type="hidden" id="existing_image_url" name="existing_image_url">
 
                 <div class="form-group">
                     <label for="category_id">Category</label>

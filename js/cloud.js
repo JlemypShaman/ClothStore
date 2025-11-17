@@ -8,7 +8,7 @@ extraImageInput.addEventListener('change', async (event) => {
         const fd = new FormData();
         fd.append('image_file', file);
 
-        const response = await fetch('/api/upload.php', { method: 'POST', body: fd });
+        const response = await fetch('api/upload.php', { method: 'POST', body: fd });
         const result = await response.json();
 
         console.log('Upload result:', result); // ← здесь увидишь ошибки или успех

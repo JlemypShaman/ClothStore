@@ -1,7 +1,7 @@
 // js/admin.js
 
 // Глобальні змінні для форми
-const API_URL = '/api/admin.php';
+const API_URL = 'api/admin.php';
 const productForm = document.getElementById('product-form');
 const formTitle = document.getElementById('form-title');
 const productIdInput = document.getElementById('product-id');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function adminGuard() {
     try {
-        const response = await fetch('/api/auth_check.php');
+        const response = await fetch('api/auth_check.php');
 
         if (!response.ok) {
             // Не залогінений (401) або інша помилка
@@ -94,20 +94,28 @@ async function loadProducts() {
 async function handleSubmitProduct(event) {
     event.preventDefault();
 
+    const productId = productIdInput.value;
+    const isUpdating = !!productId;
+
+    // 1. Використовуємо FormData замість JSON об'єкта
+    // Це автоматично збере всі поля, включаючи файл
     const formData = new FormData(productForm);
-    const data = Object.fromEntries(formData.entries());
-    const productId = productIdInput.value; // Отримуємо ID з прихованого поля
 
-    const isUpdating = !!productId; // Якщо ID є, то це UPDATE
+    // Додаємо ID вручну, якщо це оновлення
+    if (isUpdating) {
+        formData.append('id', productId);
+    }
 
-    const url = isUpdating ? `${API_URL}?id=${productId}` : API_URL;
-    const method = isUpdating ? 'PUT' : 'POST';
+    // 2. Визначаємо URL (метод завжди POST для завантаження файлів)
+    // Для оновлення ми теж використовуємо POST, бо PHP простіше так обробляє файли
+    const url = 'api/admin.php'; 
 
     try {
         const response = await fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            method: 'POST',
+            // ВАЖЛИВО: Не вказуємо Content-Type header!
+            // Браузер сам встановить multipart/form-data
+            body: formData 
         });
 
         const result = await response.json();
@@ -118,7 +126,7 @@ async function handleSubmitProduct(event) {
 
         alert(`Product ${isUpdating ? 'updated' : 'created'} successfully!`);
         resetForm();
-        loadProducts(); // Оновлюємо список товарів
+        loadProducts();
 
     } catch (error) {
         alert(error.message);
@@ -163,24 +171,33 @@ function handleEditClick(event) {
     const row = event.target.closest('tr');
     const productId = row.dataset.id;
 
-    // Знаходимо дані прямо з таблиці (простий спосіб)
+    // Знаходимо дані з таблиці
     const name = row.cells[1].textContent;
-    const price = parseFloat(row.cells[2].textContent);
-
-    // (Складніший, але кращий спосіб - отримати повні дані товару з API)
-    // const productData = ... (поки пропустимо для простоти)
+    const price = parseFloat(row.cells[2].textContent.replace('€', '')); // Прибираємо знак євро
+    const category = row.cells[3].textContent;
+    
+    // Отримуємо поточний URL картинки з тегу <img>
+    const imgTag = row.querySelector('img');
+    const currentSrc = imgTag ? imgTag.getAttribute('src') : '';
 
     // Заповнюємо форму
     formTitle.textContent = 'Edit Product';
-    productIdInput.value = productId; // Встановлюємо ID
+    productIdInput.value = productId;
+    
     productForm.querySelector('#name').value = name;
     productForm.querySelector('#price').value = price;
-    // ... (треба заповнити й інші поля, але для цього потрібен окремий запит)
+    
+    // ВАЖЛИВО: Записуємо старий шлях у приховане поле
+    productForm.querySelector('#existing_image_url').value = currentSrc;
+    
+    // Очищуємо поле файлу (користувач ще нічого нового не обрав)
+    productForm.querySelector('#image_file').value = '';
 
-    // (Поки що ми заповнимо лише те, що є в таблиці)
+    // (Опціонально) Тут можна додати логіку для вибору категорії у селекті, 
+    // але для цього треба мати ID категорії в рядку таблиці.
 
-    cancelEditBtn.style.display = 'block'; // Показуємо кнопку "Скасувати"
-    window.scrollTo(0, 0); // Прокручуємо сторінку вгору до форми
+    cancelEditBtn.style.display = 'block';
+    window.scrollTo(0, 0);
 }
 
 /**

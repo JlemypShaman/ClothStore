@@ -56,7 +56,7 @@ async function handleRegister(event) {
 
     try {
         // Робимо запит до нашого api/register.php
-        const response = await fetch('/api/register.php', {
+        const response = await fetch('api/register.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -92,7 +92,7 @@ async function handleLogin(event) {
 
     try {
         // Робимо запит до нашого api/login.php
-        const response = await fetch('/api/login.php', {
+        const response = await fetch('api/login.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -121,7 +121,7 @@ async function handleLogin(event) {
 async function loadProfile() {
     try {
         // Робимо запит до api/auth_check.php (Крок 6)
-        const response = await fetch('/api/auth_check.php');
+        const response = await fetch('api/auth_check.php');
 
         if (response.status === 401) {
             // Якщо 401 Unauthorized (не залогінений)
@@ -165,7 +165,7 @@ async function handleLogout() {
 
     try {
         // Робимо запит до нашого api/logout.php
-        const response = await fetch('/api/logout.php', {
+        const response = await fetch('api/logout.php', {
             method: 'POST'
         });
 
@@ -206,7 +206,7 @@ async function handleChangePassword(event) {
 
     try {
         // Робимо запит до нашого нового api/change_password.php
-        const response = await fetch('/api/change_password.php', {
+        const response = await fetch('api/change_password.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

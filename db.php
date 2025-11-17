@@ -15,7 +15,7 @@ if (!$host) {
     $user = "root";
     $pass = ""; // Ваш пароль від XAMPP
     $dbname = "clothstore";
-    $port = 3306;
+    $port = 3307;
 
     // Створюємо звичайне (незахищене) з'єднання
     $conn = new mysqli($host, $user, $pass, $dbname, (int)$port);

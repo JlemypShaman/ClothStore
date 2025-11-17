@@ -20,7 +20,7 @@ async function loadCart() {
     try {
         // 1. Робимо запит до нашого API, яке ми створили на Кроці 8.2
         // Ми не передаємо user_id, тому що PHP сам знає його з сесії
-        const response = await fetch('/api/get_cart.php');
+        const response = await fetch('api/get_cart.php');
 
         if (!response.ok) {
             // 401 Unauthorized (користувач не залогінений)
@@ -83,7 +83,7 @@ async function handleCheckout() {
 
     try {
         // 1. Робимо запит до нашого API (Крок 8.3)
-        const response = await fetch('/api/checkout.php', {
+        const response = await fetch('api/checkout.php', {
             method: 'POST'
         });
 
